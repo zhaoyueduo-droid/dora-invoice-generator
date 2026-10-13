@@ -1,1 +1,176 @@
-placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dora Orthopedic Massage Clinic – Professional Registered Massage Therapy in Calgary. RMT Xinxing Zhao, CRMTA 003580." />
+  <title>Dora Orthopedic Massage Clinic | Calgary RMT</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">D</span>
+        <span class="logo-text">Dora Orthopedic<br><small>Massage Clinic</small></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="admin/" class="btn btn-outline btn-sm">Admin</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-content">
+      <p class="eyebrow">Registered Massage Therapy · Calgary</p>
+      <h1>Relieve Pain.<br>Restore Movement.</h1>
+      <p class="hero-desc">Professional orthopedic and therapeutic massage focused on lasting results. Convenient NW Calgary location.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Book Appointment</a>
+        <a href="#services" class="btn btn-ghost">View Services</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <h2>Our Services</h2>
+        <p>Evidence-informed treatments tailored to your needs</p>
+      </div>
+      <div class="services-grid">
+        <article class="service-card">
+          <div class="service-icon">60</div>
+          <h3>60-Minute Massage</h3>
+          <p class="price">$100</p>
+          <p>Full therapeutic session focused on your primary areas of concern. Ideal for ongoing maintenance or specific issues.</p>
+        </article>
+        <article class="service-card featured">
+          <div class="badge">Most Popular</div>
+          <div class="service-icon">90</div>
+          <h3>90-Minute Massage</h3>
+          <p class="price">$145</p>
+          <p>Extended session allowing deeper work and full-body treatment. Recommended for complex or chronic conditions.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon">45</div>
+          <h3>45-Minute Focused</h3>
+          <p class="price">$80</p>
+          <p>Targeted treatment for a specific area (neck, shoulders, low back, etc.). Great for quick relief between longer sessions.</p>
+        </article>
+      </div>
+      <p class="tax-note">All prices in CAD. GST applicable. Direct billing available for many extended health plans.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="about">
+    <div class="container about-grid">
+      <div class="about-text">
+        <h2>About Your Therapist</h2>
+        <h3>Xinxing Zhao, RMT</h3>
+        <p class="license">CRMTA Registration #003580</p>
+        <p>Xinxing specializes in orthopedic and therapeutic massage with a focus on assessing and treating musculoskeletal conditions. Treatments are tailored to help reduce pain, improve mobility, and support long-term recovery.</p>
+        <ul class="about-list">
+          <li>Orthopedic assessment & treatment</li>
+          <li>Deep tissue & myofascial techniques</li>
+          <li>Sports & postural related issues</li>
+          <li>Stress and tension relief</li>
+        </ul>
+      </div>
+      <div class="about-card">
+        <div class="about-card-inner">
+          <div class="avatar">XZ</div>
+          <h4>Xinxing Zhao</h4>
+          <p>Registered Massage Therapist</p>
+          <p class="small">CRMTA 003580</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <h2>Book an Appointment</h2>
+        <p>Online booking is currently available by request only</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Clinic Information</h3>
+          <div class="info-item">
+            <strong>Address</strong>
+            <p>95 Evansmeade Crescent NW<br>Calgary, AB T3P 1B9</p>
+          </div>
+          <div class="info-item">
+            <strong>Phone</strong>
+            <p><a href="tel:+15875857869">+1 587-585-7869</a></p>
+          </div>
+          <div class="info-item">
+            <strong>Hours</strong>
+            <p>By appointment<br>Please text or call to schedule</p>
+          </div>
+          <div class="notice">
+            <strong>Note:</strong> Online self-booking is temporarily closed to the public. Please contact us directly to book or reschedule.
+          </div>
+        </div>
+
+        <form class="booking-form" id="bookingForm" onsubmit="return handleBooking(event)">
+          <h3>Request an Appointment</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" required placeholder="Your name" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone *</label>
+              <input type="tel" id="phone" required placeholder="Your phone number" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Optional" />
+          </div>
+          <div class="form-group">
+            <label for="service">Preferred Service</label>
+            <select id="service">
+              <option value="60min">60-Minute Massage – $100</option>
+              <option value="90min">90-Minute Massage – $145</option>
+              <option value="45min">45-Minute Focused – $80</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Preferred dates / notes</label>
+            <textarea id="message" rows="3" placeholder="Tell us your preferred times or any specific concerns"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Send Request</button>
+          <p class="form-note">We will contact you to confirm the appointment.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>Dora Orthopedic Massage Clinic</strong>
+        <p>95 Evansmeade Crescent NW, Calgary AB T3P 1B9</p>
+        <p><a href="tel:+15875857869">+1 587-585-7869</a></p>
+      </div>
+      <div class="footer-right">
+        <p>Xinxing Zhao, RMT · CRMTA 003580</p>
+        <p class="small">© 2026 Dora Orthopedic Massage Clinic</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
