@@ -1,1 +1,132 @@
-placeholder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Dora Clinic</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .admin-wrap{max-width:960px;margin:0 auto;padding:24px 16px 80px}.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}.admin-header h1{font-size:22px}.tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}.tab-btn{padding:10px 18px;border:1px solid var(--border);background:#fff;border-radius:8px;cursor:pointer;font-weight:500;font-size:14px}.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}.card h3{font-size:16px;margin-bottom:12px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border)}th{color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase}.empty{text-align:center;padding:40px;color:var(--muted)}.status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600}.status.pending{background:#fef3c7;color:#92400e}input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:10px}label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div>
+        <h1>Clinic Admin</h1>
+        <p style="color:var(--muted);font-size:14px">Dora Orthopedic Massage Clinic</p>
+      </div>
+      <a href="../index.html" class="btn btn-outline btn-sm">← Back to Website</a>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="requests">Booking Requests</button>
+      <button class="tab-btn" data-tab="clients">Clients</button>
+      <button class="tab-btn" data-tab="invoices">Invoices</button>
+    </div>
+    <div class="panel active" id="requests">
+      <div class="card">
+        <h3>Incoming Appointment Requests</h3>
+        <div id="requestsList"></div>
+      </div>
+    </div>
+    <div class="panel" id="clients">
+      <div class="card">
+        <h3>Add Client</h3>
+        <div class="grid-2">
+          <div><label>Name *</label><input type="text" id="cName" placeholder="Client name" /></div>
+          <div><label>Phone</label><input type="text" id="cPhone" placeholder="Phone" /></div>
+          <div><label>Email</label><input type="email" id="cEmail" placeholder="Email" /></div>
+          <div><label>Notes</label><input type="text" id="cNotes" placeholder="Optional notes" /></div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="addClient()">Save Client</button>
+      </div>
+      <div class="card">
+        <h3>Client List</h3>
+        <div id="clientsList"></div>
+      </div>
+    </div>
+    <div class="panel" id="invoices">
+      <div class="card">
+        <h3>Create Invoice</h3>
+        <div class="grid-2">
+          <div><label>Client Name *</label><input type="text" id="invClient" placeholder="Client name" /></div>
+          <div><label>Service</label>
+            <select id="invService">
+              <option value="60 minutes Massage|100">60 min Massage – $100</option>
+              <option value="90 minutes Massage|145">90 min Massage – $145</option>
+              <option value="45 minutes Focused|80">45 min Focused – $80</option>
+            </select>
+          </div>
+          <div><label>Date</label><input type="date" id="invDate" /></div>
+          <div><label>Tax %</label><input type="number" id="invTax" value="5" step="0.1" /></div>
+        </div>
+        <label><input type="checkbox" id="invPaid" /> Mark as Paid</label><br><br>
+        <button class="btn btn-primary btn-sm" onclick="createInvoice()">Generate & Save Invoice</button>
+      </div>
+      <div class="card">
+        <h3>Invoice History</h3>
+        <div id="invoicesList"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll(".tab-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+        if(btn.dataset.tab==="requests")renderRequests();
+        if(btn.dataset.tab==="clients")renderClients();
+        if(btn.dataset.tab==="invoices")renderInvoices();
+      });
+    });
+    function renderRequests(){
+      const list=JSON.parse(localStorage.getItem("bookingRequests")||"[]");
+      const el=document.getElementById("requestsList");
+      if(!list.length){el.innerHTML="<div class=\"empty\">No booking requests yet</div>";return;}
+      el.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Status</th></tr></thead><tbody>${list.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.service)}</td><td>${new Date(r.createdAt).toLocaleDateString()}</td><td><span class="status ${r.status}">${r.status}</span></td></tr>`).join("")}</tbody></table>`;
+    }
+    function addClient(){
+      const name=document.getElementById("cName").value.trim();
+      if(!name)return alert("Name required");
+      const clients=JSON.parse(localStorage.getItem("clinicClients")||"[]");
+      clients.unshift({id:Date.now().toString(),name,phone:document.getElementById("cPhone").value.trim(),email:document.getElementById("cEmail").value.trim(),notes:document.getElementById("cNotes").value.trim()});
+      localStorage.setItem("clinicClients",JSON.stringify(clients));
+      document.getElementById("cName").value="";document.getElementById("cPhone").value="";document.getElementById("cEmail").value="";document.getElementById("cNotes").value="";
+      renderClients();
+    }
+    function renderClients(){
+      const list=JSON.parse(localStorage.getItem("clinicClients")||"[]");
+      const el=document.getElementById("clientsList");
+      if(!list.length){el.innerHTML="<div class=\"empty\">No clients saved yet</div>";return;}
+      el.innerHTML=`<table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th></tr></thead><tbody>${list.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.email)}</td><td>${esc(c.notes)}</td></tr>`).join("")}</tbody></table>`;
+    }
+    document.getElementById("invDate").value=new Date().toISOString().slice(0,10);
+    function createInvoice(){
+      const client=document.getElementById("invClient").value.trim();
+      if(!client)return alert("Client name required");
+      const [serviceName,price]=document.getElementById("invService").value.split("|");
+      const taxRate=parseFloat(document.getElementById("invTax").value)||0;
+      const subtotal=parseFloat(price);
+      const tax=subtotal*taxRate/100;
+      const total=subtotal+tax;
+      const paid=document.getElementById("invPaid").checked;
+      const inv={id:Date.now().toString(),no:"INV-"+Date.now().toString().slice(-6),client,service:serviceName,date:document.getElementById("invDate").value,subtotal,taxRate,tax,total,paid,createdAt:new Date().toISOString()};
+      const list=JSON.parse(localStorage.getItem("clinicInvoices")||"[]");
+      list.unshift(inv);
+      localStorage.setItem("clinicInvoices",JSON.stringify(list));
+      alert(`Invoice ${inv.no} created. Total: $${total.toFixed(2)}`);
+      renderInvoices();
+    }
+    function renderInvoices(){
+      const list=JSON.parse(localStorage.getItem("clinicInvoices")||"[]");
+      const el=document.getElementById("invoicesList");
+      if(!list.length){el.innerHTML="<div class=\"empty\">No invoices yet</div>";return;}
+      el.innerHTML=`<table><thead><tr><th>No.</th><th>Client</th><th>Service</th><th>Date</th><th>Total</th><th>Status</th></tr></thead><tbody>${list.map(i=>`<tr><td>${esc(i.no)}</td><td>${esc(i.client)}</td><td>${esc(i.service)}</td><td>${esc(i.date)}</td><td>$${i.total.toFixed(2)}</td><td>${i.paid?"<span class=\"status\" style=\"background:#d1fae5;color:#065f46\">Paid</span>":"<span class=\"status pending\">Unpaid</span>"}</td></tr>`).join("")}</tbody></table>`;
+    }
+    function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
+    renderRequests();
+  </script>
+</body>
+</html>
